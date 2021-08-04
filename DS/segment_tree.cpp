@@ -1,41 +1,35 @@
 // SEGMENT TREE
-ll st[4*asz];
-ll ara[asz];
-ll f(ll l,ll r)
-{
-    return l+r;
+ll st[4*N];
+ll ara[N];
+ll f(ll l,ll r){
+    return l + r;
 }
-void init(ll node,ll ss,ll sf)
-{
-    if(ss==sf)
-    {
-        st[node]=ara[ss];
+void init(int node, int ss, int sf){
+    if(ss == sf){
+        st[node] = ara[ss];
         return;
     }
-    ll mid=(ss+sf)/2;
-    init(2*node,ss,mid);
-    init(2*node+1,mid+1,sf);
-    st[node]=f(st[2*node],st[2*node+1]);
+    int mid = (ss + sf) >> 1;
+    init(node << 1, ss, mid);
+    init(node << 1 | 1, mid + 1, sf);
+    st[node] = f(st[node << 1], st[node << 1 | 1]);
 }
 //adds value
-void update(ll node,ll ss,ll sf,ll pos,ll val)
-{
-    if(ss==sf)
-    {
-        st[node]+=val;
+void update(int node, int ss, int sf, int pos, ll val){
+    if(ss == sf){
+        st[node] += val;
         return;
     }
-    ll mid=(ss+sf)/2;
-    if(pos<=mid)update(2*node,ss,mid,pos,val);
-    else update(2*node+1,mid+1,sf,pos,val);
-    st[node]=f(st[2*node],st[2*node+1]);
+    int mid = (ss + sf) >> 1;
+    if(pos <= mid) update(node << 1, ss, mid, pos, val);
+    else update(node << 1 | 1, mid + 1, sf, pos, val);
+    st[node] = f(st[node << 1], st[node << 1 | 1]);
 }
-ll query(ll node,ll ss,ll sf,ll qs,ll qe)
-{
-    if(qs>sf||qe<ss||sf<ss)return 0;
-    if(qs<=ss&&qe>=sf)return st[node];
-    ll mid=(ss+sf)/2;
-    return f(query(2*node,ss,mid,qs,qe),query(2*node+1,mid+1,sf,qs,qe));
+ll query(int node, int ss, int sf, int qs, int qe){
+    if(qs > sf || qe < ss || qe < qs)return 0;
+    if(qs <= ss && qe >= sf)return st[node];
+    int mid = (ss + sf) >> 1;
+    return f(query(node << 1, ss, mid, qs, qe), query(node << 1 | 1, mid + 1, sf, qs, qe));
 }
 
 //Modified update for ordered multiset
