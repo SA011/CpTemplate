@@ -1,0 +1,16 @@
+ll bit[2][asz];
+void update1(int ind,ll val,ll val2){
+    for(++ind;ind<asz;ind+=lastone(ind))bit[0][ind]+=val,bit[1][ind]+=val2;
+}
+void update(int l,int r,int val){
+    update1(l,val,(l-1)*val);
+    update1(r+1,-val,-r*val);
+}
+ll query1(int l){
+    ll s=0,u=l;
+    for(++l;l>0;l-=lastone(l))s+=u*bit[0][l]-bit[1][l];
+    return s;
+}
+ll query(int l,int r){
+    return query1(r)-query1(l-1);
+}
