@@ -67,10 +67,15 @@ struct SegmentTree{
     
     vector<Node> st;
     int n;
-    SegmentTree(int _n) : n(_n){
-        assert(n > 0);
+    
+    void init(int _n){
+        if(_n <= 0)return;
+        n = _n;
         int m = ceil(log2(n)) + 1;
         st.resize((1 << m) + 5);
+    }
+    SegmentTree(int _n = 0){
+        init(_n);
     }
     
     void build(int x, int l, int r, vector<T> &v){
@@ -105,7 +110,7 @@ struct SegmentTree{
         if(sr < l || sl > r)return T();
         if(sl >= l && sr <= r)return st[x].res;
         int m = sl + sr >> 1;
-        return merge(query(x << 1, sl, m, l, r), query(x << 1 | 1, m + 1, r, l, r));
+        return merge(query(x << 1, sl, m, l, r), query(x << 1 | 1, m + 1, sr, l, r));
     }
     Node query(int l, int r){
         if(l > r)return Node();

@@ -1,5 +1,5 @@
-vi adj[2][N];
-int vis[N],comp[N],sat[N];
+vector<int> adj[2][N];
+int vis[N], comp[N], sat[N];
 vi ts;
 void init(int n){
     for(int i = 0; i < n; i++)
@@ -16,8 +16,8 @@ void add(int a, int b){
 void dfs(int ind, int r, int d = -1){
     vis[ind] = 1;
     if(r) comp[ind] = d;
-    for(auto x:adj[r][ind])
-        if(vis[x] == 0) dfs(x,r,d);
+    for(auto &x : adj[r][ind])
+        if(vis[x] == 0) dfs(x, r, d);
     if(!r) ts.push_back(ind);
 }
 bool solve2sat(int n){
@@ -31,8 +31,8 @@ bool solve2sat(int n){
     }
     
     for(int i = 0; i < n; i += 2){
-        if(comp[i] == comp[i|1])return false;
-        sat[i >> 1] = comp[i] > comp[i|1];
+        if(comp[i] == comp[i | 1])return false;
+        sat[i >> 1] = comp[i] > comp[i | 1];
     }
     return true;
 }

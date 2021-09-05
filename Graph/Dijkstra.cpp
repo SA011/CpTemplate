@@ -1,19 +1,15 @@
-typedef pair<ll,ll> ii;
-void dijkstra(vi &dis,ll ind)
-{
-    dis[ind]=0;
-    priority_queue<ii,vector<ii>,greater<ii>> pq;
-    pq.push(ii(0,ind));
-    while(!pq.empty())
-    {
-        ii u=pq.top();
+void dijkstra(vector<ll> &dis, int s){
+    dis[s] = 0;
+    priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> pq;
+    pq.push(pair<ll, ll>(0, s));
+    while(!pq.empty()){
+        auto [d, u] = pq.top();
         pq.pop();
-        if(dis[u.se]<u.fi)continue;
-        for(ii x:adj[u.se])
-        {
-            if(dis[x.fi]<u.fi+x.se)continue;
-            dis[x.fi]=u.fi+x.se;
-            pq.push(ii(dis[x.fi],x.fi));
+        if(dis[u] < d)continue;
+        for(auto& [x, y] : adj[u]){
+            if(dis[x] < d + y)continue;
+            dis[x] = d + y;
+            pq.push(pair<ll, ll>(dis[x], x));
         }
     }
 }
