@@ -54,6 +54,7 @@ struct vert{
     ll s;
     vert(ll s = 0) : s(s) { l = r = 0;}
 };
+int roots[N];
 vert st[N * K]; // K = log2(n) + 4
 ll f(ll l, ll r){
     return l + r;
@@ -65,8 +66,8 @@ void init(ll node, int ss, int sf){
         return;
     }
     int mid = ss + sf >> 1;
-    st[node].l = ind++;
-    st[node].r = ind++;
+    st[node].l = pstInd++;
+    st[node].r = pstInd++;
     init(st[node].l, ss, mid);
     init(st[node].r, mid + 1, sf);
     st[node].s = f(st[st[node].l].s, st[st[node].r].s);
@@ -79,12 +80,12 @@ void update(int cur, int pre, int ss, int sf, int pos, ll val){
     int mid = ss + sf >> 1;
     if(pos <= mid){
         st[cur].r = st[pre].r;
-        st[cur].l = ind++;
+        st[cur].l = pstInd++;
         update(st[cur].l, st[pre].l, ss, mid, pos, val);
     }
     else{
         st[cur].l = st[pre].l;
-        st[cur].r = ind++;
+        st[cur].r = pstInd++;
         update(st[cur].r, st[pre].r, mid + 1, sf, pos, val);
     }
     st[cur].s = f(st[st[cur].l].s, st[st[cur].r].s);
