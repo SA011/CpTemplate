@@ -50,7 +50,7 @@ ll query(vert *r, vert *l, int ss, int sf, int qs, int qe){
 //Without pointer
 int pstInd;
 struct vert{
-    int l,r;
+    int l, r;
     ll s;
     vert(ll s = 0) : s(s) { l = r = 0;}
 };
@@ -60,7 +60,7 @@ ll f(ll l, ll r){
     return l + r;
 }
 ll ara[N];
-void init(ll node, int ss, int sf){
+void init(int node, int ss, int sf){
     if(ss == sf){
         st[node].s = ara[ss];
         return;
@@ -94,5 +94,5 @@ ll query(int R, int L, int ss, int sf, int qs, int qe){
     if(qs > sf || qe < ss || qs > qe)return 0;
     if(qs <= ss && qe >= sf)return st[R].s - st[L].s;
     int mid = ss + sf >> 1;
-    return f(query(st[R].l, st[L].l, ss, mid, qs, qe), query(st[R].r,st[L].r, mid + 1, sf, qs, qe));
+    return f(query(st[R].l, st[L].l, ss, mid, qs, qe), query(st[R].r, st[L].r, mid + 1, sf, qs, qe));
 }

@@ -136,7 +136,7 @@ struct LinkCutTree{
     void cut(int u){
         access(u);
         Nodes[Nodes[u].child[0]].parent = 0;
-        Nodes[u].child[0] = 0;
+        setChild(u, 0, 0);
     }
     void update(int u, int v, int w){
         makeRoot(u), access(v);

@@ -1,3 +1,5 @@
+//DEBUG: https://www.spoj.com/problems/ILKQUERYIII/
+
 struct BitVector{
 //pragma GCC target ("sse4.2")
     using T = unsigned int;
