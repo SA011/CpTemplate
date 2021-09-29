@@ -3,8 +3,6 @@
 
 WHEEL FACT
    for 210: ll incr[]={10,2,4,2,4,6,2,6,4,2,4,6,6,2,6,4,2,6,4,6,8,4,2,4,2,4,8,6,4,6,2,4,6,2,6,6,4,2,4,6,2,6,4,2,4,2,10,2};
-
-
     skip[1]=0,skip[11]=1,skip[13]=2,skip[17]=3,skip[19]=4,skip[23]=5,skip[29]=6,skip[31]=7;
     skip[37]=8,skip[41]=9,skip[43]=10,skip[47]=11,skip[53]=12,skip[59]=13,skip[61]=14,skip[67]=15;
     skip[71]=16,skip[73]=17,skip[79]=18,skip[83]=19,skip[89]=20,skip[97]=21,skip[101]=22,skip[103]=23;
@@ -17,109 +15,132 @@ WHEEL FACT
 
 */
 
-ll prime[asz];
-ll prime_ind=0;
-bitset<asz> bs(0);
-void sieve()
-{
-    bs[0]=bs[1]=1;
-    for(ll i=2;i<asz;i++)
-    {
+int prime[N / 10];
+int primeInd = 0;
+bitset<N> bs(0);
+void sieve(){
+    bs[0] = bs[1] = 1;
+    for(int i = 2; i < N; i++){
         if(bs[i])continue;
-        for(ll j=i*i;j<asz;j+=i)bs[j]=1;
-        prime[prime_ind]=i;
-        prime_ind++;
+        if((long long)i * i < N) 
+            for(int j = i * i; j < N; j += i)bs[j] = 1;
+        prime[primeInd++] = i;
     }
 }
-//This is with simple
-bool is_prime(ll n)
-{
-    if(n<asz)return !bs[n];
-    for(ll i=0;i<prime_ind&&prime[i]*prime[i]<=n;i++)
-    {
-        if(n%prime[i]==0)return 0;
-    }
-    return 1;
-}
-
-
 
 
 //bitwise sieve
-int bs[(asz+63)/64];
-ll prime[asz];
-ll prime_ind=0;
 
-bool isprime(ll x)
-{
-    if(x==2||x==3)return true;
-    if(x%2==0||x%3==0)return false;
-    return !(bs[x/64] & (1 << ((x >> 1) & 31)));
+int bs[(N+63)/64];
+int prime[N / 10];
+int primeInd = 0;
+
+bool isPrime(int x){
+    if(x == 2)return true;
+    if(!(x & 1))return false;
+    return !(bs[x >> 6] & (1 << ((x >> 1) & 31)));
 }
-void make_comp(ll x)
-{
-    bs[x/64] |= (1 << ((x >> 1) & 31));
+void makeComp(int x){
+    bs[x >> 6] |= (1 << ((x >> 1) & 31));
 }
-void sieve()
-{
-    prime[prime_ind++]=2;
-    for(ll i=3;i<asz;i+=2)
-    {
-        if(isprime(i)){
-            prime[prime_ind++]=i;
-            if((long long)i*i<asz)for(ll j=i*i,k=(i<<1);j<asz;j+=k)make_comp(j);
+void sieve(){
+    prime[primeInd++] = 2;
+    for(int i = 3; i < N; i += 2){
+        if(isPrime(i)){
+            prime[primeInd++] = i;
+            if((long long)i * i < N)
+                for(int j = i * i; j < N; j += (i << 1))
+                    makeComp(j);
         }
     }
 }
-
 
 
 
 
 
 // bitwise with wheel factorization (2,3)
-int bs[(asz+63)/64];
-ll prime[asz];
-ll prime_ind=0;
+int bs[(N+63)/64];
+int prime[N / 10];
+int primeInd = 0;
 
-bool isprime(ll x)
-{
-    if(x==2||x==3)return true;
-    if(x%2==0||x%3==0)return false;
-    return !(bs[x/64] & (1 << ((x >> 1) & 31)));
+bool isPrime(int x){
+    if(x == 2 || x == 3)return true;
+    if(!(x & 1) || x % 3 == 0)return false;
+    return !(bs[x >> 6] & (1 << ((x >> 1) & 31)));
 }
-void make_comp(ll x)
-{
-    bs[x/64] |= (1 << ((x >> 1) & 31));
+void makeComp(int x){
+    bs[x >> 6] |= (1 << ((x >> 1) & 31));
 }
-void sieve()
-{
-    ll k=2;
-    prime[prime_ind++]=2;
-    prime[prime_ind++]=3;
-    for(ll i=5;i<asz;i+=k,k=6-k)
-    {
-        if(isprime(i)){
-
-            prime[prime_ind++]=i;
-            ll r;
-                if(i%6==1)r=4;
-        else r=2;
-            if((long long)i*i<asz)for(ll j=i*i;j<asz;j+=r*i,r=6-r)make_comp(j);
+void sieve(){
+    int k = 2;
+    prime[primeInd++] = 2;
+    prime[primeInd++] = 3;
+    for(int i = 5; i < N; i += k, k = 6 - k){
+        if(isPrime(i)){
+            prime[primeInd++] = i;
+            int r;
+            if(i % 6 == 1)r = 4;
+            else r = 2;
+            if((long long)i * i < N)
+                for(int j = i * i; j < N; j += r * i, r = 6 - r)
+                    makeComp(j);
         }
     }
 }
 
+//2.8 sec prime genarator upto 1e9
 
-
+#define bbb 16625001
+int bs[bbb];
+bool isPrime(int x){
+    return !(bs[x >> 6] & (1 << ((x >> 1) & 31)));
+}
+void makeComp(int x){
+    bs[x >> 6] |= (1 << ((x >> 1) & 31));
+}
+int skip[210];
+int prime[60000005];
+int cnt = 0;
+void sieve(){
+    skip[1]=0,skip[11]=1,skip[13]=2,skip[17]=3,skip[19]=4,skip[23]=5,skip[29]=6,skip[31]=7;
+    skip[37]=8,skip[41]=9,skip[43]=10,skip[47]=11,skip[53]=12,skip[59]=13,skip[61]=14,skip[67]=15;
+    skip[71]=16,skip[73]=17,skip[79]=18,skip[83]=19,skip[89]=20,skip[97]=21,skip[101]=22,skip[103]=23;
+    skip[107]=24,skip[109]=25,skip[113]=26,skip[121]=27,skip[127]=28,skip[131]=29,skip[137]=30,skip[139]=31;
+    skip[143]=32,skip[149]=33,skip[151]=34,skip[157]=35,skip[163]=36,skip[167]=37,skip[169]=38,skip[173]=39;
+    skip[179]=40,skip[181]=41,skip[187]=42,skip[191]=43,skip[193]=44,skip[197]=45,skip[199]=46,skip[209]=47;
+    int incr[] = {10, 2, 4, 2, 4, 6, 2, 6, 4, 2,
+                   4, 6, 6, 2, 6, 4, 2, 6, 4, 6,
+                   8, 4, 2, 4, 2, 4, 8, 6, 4, 6,
+                   2, 4, 6, 2, 6, 6, 4, 2, 4, 6,
+                   2, 6, 4, 2, 4, 2, 10, 2};
+    prime[cnt++] = 2;
+    prime[cnt++] = 3;
+    prime[cnt++] = 5;
+    prime[cnt++] = 7;
+    int u = 1;
+    for(ll i = 11; i < N; i += incr[u++]){
+        if(isPrime(i)){
+            if((i * i < N){
+                int k = skip[i % 210];
+                for(ll j = i * i; j < N; j += incr[k++] * i){
+                    makeComp(j);
+                    if(k == 48)k = 0;
+                }
+            }
+            prime[cnt++] = i;
+        }
+        if(u == 48)u = 0;
+    }
+}
 
 
 // primes in a range
-ll primes_in_range(ll l,ll r,ll prime[]) {
-    ll S=r-l+1;
-    ll nsqrt = sqrt(r+1);
+int primes_in_range(ll l, ll r, ll prime[]) {
+    int S = r - l + 1;
+    int nsqrt = sqrt(r+1);
 
-    vector<ll> primes;
+    vector<int> primes;
     vector<bool> is_prime(nsqrt + 1, true);
     for (ll i = 2; i <= nsqrt; i++) {
         if (is_prime[i]) {
@@ -128,18 +149,18 @@ ll primes_in_range(ll l,ll r,ll prime[]) {
                 is_prime[j] = false;
         }
     }
-    ll result = 0;
+    int result = 0;
     vector<bool> block(S);
     fill(block.begin(), block.end(), true);
-    for (ll p:primes) {
+    for (int p : primes) {
         ll start_idx = (l + p - 1) / p;
-        ll j = max(start_idx, p) * p -l;
+        ll j = max(start_idx, p) * p - l;
         for (; j < S; j += p)
                block[j] = false;
     }
     for (ll i = 0; i < S && l + i <= r; i++) {
         if (block[i])
-            prime[result++]=(i+l);
+            prime[result++] = (i + l);
     }
     return result;
 }
@@ -148,12 +169,11 @@ ll primes_in_range(ll l,ll r,ll prime[]) {
 
 
 
-//Need some change
-ll count_primes(ll n,ll prime[]) {
-    const ll S = 10000;
-    ll nsqrt = sqrt(n);
+int count_primes(ll n, ll prime[]) {
+    const int S = 10000;
+    int nsqrt = sqrt(n + 1);
 
-    vector<ll> primes;
+    vector<int> primes;
     vector<bool> is_prime(nsqrt + 1, true);
     for (ll i = 2; i <= nsqrt; i++) {
         if (is_prime[i]) {
@@ -162,12 +182,12 @@ ll count_primes(ll n,ll prime[]) {
                 is_prime[j] = false;
         }
     }
-    ll result = 0;
+    int result = 0;
     vector<bool> block(S);
     for (ll k = 0; k * S <= n; k++) {
         fill(block.begin(), block.end(), true);
         ll start = k * S;
-        for (ll p:primes) {
+        for (int p:primes) {
             ll start_idx = (start + p - 1) / p;
             ll j = max(start_idx, p) * p - start;
             for (; j < S; j += p)
@@ -177,7 +197,7 @@ ll count_primes(ll n,ll prime[]) {
             block[0] = block[1] = false;
         for (ll i = 0; i < S && start + i <= n; i++) {
             if (block[i])
-                prime[result++]=(i+start);
+                prime[result++] = (i + start);
         }
     }
     return result;
