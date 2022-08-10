@@ -29,14 +29,19 @@ public:
     template <class T> void putarray(T *x,int n){for(int i=0;i<n;i++){if(i!=0)(*this)<<' ';(*this)<<x[i];}}
 }out;
 
-void fastscan(ll &x)
-{
-    char c=getchar();
-    ll m=1;
-    if(c=='-')m=-1,c=getchar();
-    x=0;
-    while(isdigit(c))x=x*10+c-'0',c=getchar();
-    x*=m;
+
+#ifdef WIN32
+inline int getchar_unlocked() { return _getchar_nolock(); }
+#endif
+
+void fastscan(ll &x){
+    char c = getchar_unlocked();
+    while(isspace(c))c = getchar_unlocked();
+    int m = 0;
+    if(c == '-')m = 1, c = getchar_unlocked();
+    x = 0;
+    while(isdigit(c))x = (x << 3) + (x << 1) + c - '0' , c = getchar_unlocked()();
+    if(m)x = -x;
 }
 
 
